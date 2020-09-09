@@ -15,8 +15,10 @@
       }
     </style>
 	<h1><b>Welcome to Movie Recommendation System</b></h1>
-	<div>
-    	<input id="searchfield" placeholder="Find Similar Movies" type="text" name="q" size="80" autofocus autocomplete="off" class="form-control input-lg">
-  	</div>
+	<form method="get" action="#">
+		<div>
+	    	<input id="searchfield" placeholder="Find Similar Movies" type="text" name="q" autofocus autocomplete="off" class="form-control input-lg">
+	  	</div>
+	</form>
     <script src="{{ url_for('static', filename='js/app.js')}}"></script>
 {% endblock %}
