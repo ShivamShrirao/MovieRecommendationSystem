@@ -37,9 +37,7 @@ def about():
 		if term:
 			resp = db.movies.find_one({"title": term}, {"_id": 0})
 	except KeyError:
-		results = get_genre_count()
-		for doc in results.find():
-			print(doc)
+		pass
 	return render_template("about.html", resp=resp)
 
 
@@ -55,6 +53,23 @@ def get_genre_count():
 				  "}")
 	results = db.movies.map_reduce(map, reduce, "results")
 	return results
+
+
+@app.route('/wordcloud')
+def wordcloud():
+	results = get_genre_count()
+	frq = []
+	mxvl = 0
+	for doc in results.find():
+		dct = {}
+		dct["text"] = doc["_id"]
+		dct["size"] = doc["value"]
+		if doc["value"] > mxvl:
+			mxvl = doc["value"]
+		frq.append(dct)
+	for dct in frq:
+		dct["size"] = 20 + int(120*dct["size"]/mxvl)
+	return render_template("wordcloud.html", frq=frq)
 
 
 if __name__ == '__main__':
