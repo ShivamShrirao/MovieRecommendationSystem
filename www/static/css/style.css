@@ -380,7 +380,7 @@ body {
     background-repeat: no-repeat;
     background-size: auto;
     background-attachment: fixed;
-    background: url("../images/bg.jpg") no-repeat;
+    background: url("/static/images/bg.jpg") no-repeat;
 }
 
 #nav-icon1 {

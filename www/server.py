@@ -13,14 +13,13 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-	return render_template("base.html")
+	return render_template("index.html")
 
 
-@app.route('/submit', methods=['POST'])
+@app.route('/fetch')
 def submit():
-	img = request.form['input']
-
-	jj = {}
+	term = request.args['term']
+	jj = [term]
 	return json.dumps(jj)
 
 
