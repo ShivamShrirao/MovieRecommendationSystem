@@ -23,7 +23,7 @@ def submit():
 	term = request.args['term']
 	resp = []
 	if term:
-		res = db.movies.find({"title": re.compile(term, re.IGNORECASE)}, {"_id": 0, "title": 1}, limit=12)
+		res = db.movies.find({"title": re.compile(term, re.IGNORECASE)}, {"_id": 0, "title": 1}, sort=[("title", 1)], limit=12)
 		for nm in res:
 			resp.append(nm["title"])
 	return json.dumps(resp)
