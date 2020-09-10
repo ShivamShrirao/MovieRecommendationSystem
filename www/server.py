@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-	return render_template("index.html")
+	return render_template("index.html", frq=wordcloud())
 
 
 @app.route('/fetch')
@@ -55,7 +55,6 @@ def get_genre_count():
 	return results
 
 
-@app.route('/wordcloud')
 def wordcloud():
 	results = get_genre_count()
 	frq = []
@@ -69,7 +68,7 @@ def wordcloud():
 		frq.append(dct)
 	for dct in frq:
 		dct["size"] = 20 + int(120*dct["size"]/mxvl)
-	return render_template("wordcloud.html", frq=frq)
+	return frq
 
 
 if __name__ == '__main__':
