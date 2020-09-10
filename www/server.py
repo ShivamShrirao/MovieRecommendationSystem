@@ -67,9 +67,10 @@ def wordcloud():
 			mxvl = doc["value"]
 		frq.append(dct)
 	for dct in frq:
-		dct["size"] = 20 + int(120*dct["size"]/mxvl)
+		dct["size"] = 15 + int(130*dct["size"]/mxvl)
 	return frq
 
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(debug=False)
+	# app.run(host='0.0.0.0', port=31796, debug=False)
