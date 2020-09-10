@@ -51,7 +51,7 @@ def get_genre_count():
 	reduce = Code("function(key, values) {"
 				  "		return Array.sum(values)"
 				  "}")
-	results = db.movies.map_reduce(map, reduce, "results")
+	results = db.movies.map_reduce(map, reduce, "genreCount")
 	return results
 
 
@@ -67,10 +67,10 @@ def wordcloud():
 			mxvl = doc["value"]
 		frq.append(dct)
 	for dct in frq:
-		dct["size"] = 15 + int(130*dct["size"]/mxvl)
+		dct["size"] = 15 + int(130 * dct["size"] / mxvl)
 	return frq
 
 
 if __name__ == '__main__':
 	app.run(debug=False)
-	# app.run(host='0.0.0.0', port=31796, debug=False)
+#	app.run(host='0.0.0.0', port=31796, debug=False)
