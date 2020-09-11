@@ -8,7 +8,7 @@ from pymongo import MongoClient
 from bson.code import Code
 
 client = MongoClient("localhost", 27017)
-db = client.IMDB
+db = client.moviemeta
 
 app = Flask(__name__)
 
@@ -51,18 +51,25 @@ def get_genre_count():
 	reduce = Code("function(key, values) {"
 				  "		return Array.sum(values)"
 				  "}")
-	results = db.movies.map_reduce(map, reduce, "genreCount")
-	return results
+	genreCount = db.movies.map_reduce(map, reduce, "genreCount")
+	return genreCount
+
+
+mapred_count = 0
+update_int = 40
 
 
 def wordcloud():
-	results = get_genre_count()
+	global mapred_count
+	if not mapred_count % update_int:
+		genreCount = get_genre_count()
+	else:
+		genreCount = db.genreCount
+	mapred_count = (mapred_count + 1) % update_int
 	frq = []
 	mxvl = 0
-	for doc in results.find():
-		dct = {}
-		dct["text"] = doc["_id"]
-		dct["size"] = doc["value"]
+	for doc in genreCount.find():
+		dct = {"text": doc["_id"], "size": doc["value"]}
 		if doc["value"] > mxvl:
 			mxvl = doc["value"]
 		frq.append(dct)
