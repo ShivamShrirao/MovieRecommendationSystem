@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-	 <h1>{{ ret.title }}</h1>
-   <h3>Genres:</h3>
-   <ul>
-    {% for gnr in ret.genres %}
-      <li>{{gnr}}</li>
-    {% endfor %}
-   </ul>
+	<h1><b style="color: black">Search Results:</b></h1>
+	<!-- <ul> -->
+	{% for doc in res %}
+		{% with movieobj=doc %}
+			{% include "tile.html" %}
+		{% endwith %}
+		<br>
+	{% endfor %}
+	<!-- </ul> -->
 {% endblock %}

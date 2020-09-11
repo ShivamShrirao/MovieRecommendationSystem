@@ -5,11 +5,12 @@ $(document).ready(function(){
 		minLength: 1,
 		select: function(event, ui){
 			$('#searchfield').val(ui.item.value);
+			window.location = ui.item.url;
 		}
 	}).data('ui-autocomplete')._renderItem = function(ul, item){
 		return $("<li class='ui-autocomplete-row'></li>")
 				.data("item.autocomplete", item)
-				.append(item.label)
+				.append("<a href='" + item.url + "'>" + item.label + "</a>")
 				.appendTo(ul);
 		};
 

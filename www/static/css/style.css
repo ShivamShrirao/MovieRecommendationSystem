@@ -521,3 +521,25 @@ body {
   .sidebar {padding-top: 15px;}
   .sidebar a {font-size: 18px;}
 }
+
+.column {
+    float: left;
+    padding: 5px;
+  }
+
+  .tile {
+    background-color: #ffffffaa;
+    border-radius: 25px;
+    padding-left: 10px;
+    box-shadow: 6px 6px 5px;
+  }
+
+  .row::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+
+  span.keys {
+    color:green;
+  }

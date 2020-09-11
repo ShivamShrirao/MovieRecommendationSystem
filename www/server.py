@@ -33,30 +33,25 @@ def submit():
 		for nm in res:
 			resp.append({
 					"value": nm["title"],
-					"label": "<a href='" + url_for('about', id=nm["id"]) + "'><img src='https://image.tmdb.org/t/p/w92" + str(
-							nm["poster_path"]) + "' height='70' />" + str(nm["title"]) + "</a>"
+					"label": "<img src='https://image.tmdb.org/t/p/w92" + str(nm["poster_path"]) + "' height='70' />" + str(nm["title"]),
+					"url": url_for('about', id=nm["id"])
 					})
 	return json.dumps(resp)
 
 
 @app.route('/search')
 def search():
-	ret = {"title": "Title"}
+	res = []
 	try:
 		term = request.args['q']
 		if term:
-			resp = db.movies.find({"title": term}, {"_id": 0})
-			if resp.count() == 1:
-				ret = resp.next()
-				return render_template("about.html", ret=ret)
-			else:
-				pass
+			res = db.movies.find({"title": re.compile(term, re.IGNORECASE)}, {"_id": 0}, sort=[("title", 1)], limit=30)
 	except KeyError:
 		pass
-	return render_template("search.html", ret=ret)
+	return render_template("search.html", res=res)
 
 
-def get_recommendations(idx, top_k=21):
+def get_recommendations(idx, top_k=31):
 	cur_embedding = corpus_embeddings[idx]
 	cos_scores = util.pytorch_cos_sim(cur_embedding, corpus_embeddings)[0]
 	cos_scores = cos_scores.cpu()
@@ -67,10 +62,9 @@ def get_recommendations(idx, top_k=21):
 @app.route('/about/<id>')
 def about(id):
 	ret = db.movies.find_one({"id": int(id)}, {"_id": 0})
-	ret["cos_score"] = False
 	similar = []
 	if ret is None:
-		ret = {"title": "Not Found!", "poster_path": False}
+		ret = {"title": "Not Found!"}
 	else:
 		top_results, cos_scores = get_recommendations(ret["idx"])
 		for i in top_results:
