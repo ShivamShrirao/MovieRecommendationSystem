@@ -23,9 +23,13 @@ def submit():
 	term = request.args['term']
 	resp = []
 	if term:
-		res = db.movies.find({"title": re.compile(term, re.IGNORECASE)}, {"_id": 0, "title": 1}, sort=[("title", 1)], limit=12)
+		res = db.movies.find({"title": re.compile(term, re.IGNORECASE)}, {"_id": 0, "title": 1, "poster_path": 1}, sort=[("title", 1)],
+				limit=12)
 		for nm in res:
-			resp.append(nm["title"])
+			resp.append({
+					"value": nm["title"],
+					"label": "<img src='https://image.tmdb.org/t/p/w92" + str(nm["poster_path"]) + "' height='70' />" + str(nm["title"])
+					})
 	return json.dumps(resp)
 
 
@@ -79,5 +83,5 @@ def wordcloud():
 
 
 if __name__ == '__main__':
-	app.run(debug=False)
+	app.run(debug=True)
 #	app.run(host='0.0.0.0', port=31796, debug=False)
