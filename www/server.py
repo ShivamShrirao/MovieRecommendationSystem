@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, url_for
+from sentence_transformers import SentenceTransformer, util
 import numpy as np
 import json
 import re
@@ -23,26 +24,39 @@ def submit():
 	term = request.args['term']
 	resp = []
 	if term:
-		res = db.movies.find({"title": re.compile(term, re.IGNORECASE)}, {"_id": 0, "title": 1, "poster_path": 1}, sort=[("title", 1)],
+		res = db.movies.find({"title": re.compile(term, re.IGNORECASE)}, {"_id": 0, "title": 1, "id": 1, "poster_path": 1}, sort=[("title", 1)],
 				limit=12)
 		for nm in res:
 			resp.append({
 					"value": nm["title"],
-					"label": "<img src='https://image.tmdb.org/t/p/w92" + str(nm["poster_path"]) + "' height='70' />" + str(nm["title"])
+					"label": "<a href='"+url_for('about', id=nm["id"])+"'><img src='https://image.tmdb.org/t/p/w92" + str(nm["poster_path"]) + "' height='70' />" + str(nm["title"]) + "</a>"
 					})
 	return json.dumps(resp)
 
 
-@app.route('/about')
-def about():
-	resp = {"title": "Title"}
+@app.route('/search')
+def search():
+	ret = {"title": "Title"}
 	try:
 		term = request.args['q']
 		if term:
-			resp = db.movies.find_one({"title": term}, {"_id": 0})
+			resp = db.movies.find({"title": term}, {"_id": 0})
+			if resp.count() == 1:
+				ret = resp.next()
+				return render_template("about.html", ret=ret)
+			else:
+				pass
 	except KeyError:
 		pass
-	return render_template("about.html", resp=resp)
+	return render_template("about.html", ret=ret)
+
+
+@app.route('/about/<id>')
+def about(id):
+	ret = db.movies.find_one({"id": int(id)}, {"_id": 0})
+	if ret is None:
+		ret = {"title": "Not Found!"}
+	return render_template("about.html", main_movie=ret)
 
 
 def get_genre_count():
@@ -83,5 +97,5 @@ def wordcloud():
 
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(debug=False)
 #	app.run(host='0.0.0.0', port=31796, debug=False)

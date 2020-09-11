@@ -1,0 +1,80 @@
+	<div class="row tile">
+		<h1><b><u>{{ movieobj.title }}</u></b></h1>
+		<div class="column" style="width: 9%">
+			<img src='https://image.tmdb.org/t/p/w154/{{ movieobj.poster_path }}' height="170" />
+		</div>
+		<div class="column" style="width: 90%">
+			<div class="row">
+				<div class="column" style="width: 40%">
+					<ul>
+						{% if movieobj.genres %}
+							<li>
+								<span class="keys">Genres: </span>
+								{% for gnr in movieobj.genres %}
+									{{gnr}}
+								{% endfor %}
+							</li>
+						{% endif %}
+						{% if movieobj.budget %}
+							<li>
+								<span class="keys">Budget: </span>{{movieobj.budget}}
+							</li>
+						{% endif %}
+						{% if movieobj.imdb_id %}
+							<li>
+								<span class="keys">IMDB: </span><a href="https://www.imdb.com/title/{{movieobj.imdb_id}}" target="_blank">https://www.imdb.com/title/{{movieobj.imdb_id}}</a>
+							</li>
+						{% endif %}
+						{% if movieobj.original_language %}
+							<li>
+								<span class="keys">Language: </span>{{movieobj.original_language}}
+							</li>
+						{% endif %}
+						{% if movieobj.release_date %}
+							<li>
+								<span class="keys">Release Date: </span><span>{{movieobj.release_date}}</span>
+							</li>
+						{% endif %}
+					</ul>
+				</div>
+				<div class="column" style="width: 50%">
+					<ul>
+						{% if movieobj.revenue %}
+							<li>
+								<span class="keys">Revenue: </span><span>$ {{movieobj.revenue}}</span>
+							</li>
+						{% endif %}
+						{% if movieobj.vote_average %}
+							<li>
+								<span class="keys">Avg. ratings: </span><span>{{movieobj.vote_average}} ⭐</span>
+							</li>
+						{% endif %}
+						{% if movieobj.cast %}
+							<li>
+								<span class="keys">Cast: </span>
+								{% for gnr in movieobj.cast %}
+									{{gnr}}
+								{% endfor %}
+							</li>
+						{% endif %}
+						{% if movieobj.director %}
+							<li>
+								<span class="keys">Director: </span><span>{{movieobj.director}}</span>
+							</li>
+						{% endif %}
+					</ul>
+				</div>
+			</div>
+			<div class="row">
+				<div class="column" style="width: 99%; margin-top: -20px">
+					<ul>
+						{% if movieobj.overview %}
+							<li>
+								<span class="keys">Overview: </span><span>{{movieobj.overview}}</span>
+							</li>
+						{% endif %}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>

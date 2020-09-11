@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+	 <h1>{{ ret.title }}</h1>
+   <h3>Genres:</h3>
+   <ul>
+    {% for gnr in ret.genres %}
+      <li>{{gnr}}</li>
+    {% endfor %}
+   </ul>
+{% endblock %}
