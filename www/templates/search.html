@@ -2,12 +2,10 @@
 
 {% block content %}
 	<h1><b style="color: black">Search Results:</b></h1>
-	<!-- <ul> -->
 	{% for doc in res %}
 		{% with movieobj=doc %}
 			{% include "tile.html" %}
 		{% endwith %}
 		<br>
 	{% endfor %}
-	<!-- </ul> -->
 {% endblock %}

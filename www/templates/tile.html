@@ -20,14 +20,12 @@
 						{% if movieobj.genres %}
 							<li>
 								<span class="keys">Genres: </span>
-								{% for gnr in movieobj.genres %}
-									{{gnr}},
-								{% endfor %}
+								{{movieobj.genres|join(', ')}}
 							</li>
 						{% endif %}
 						{% if movieobj.budget %}
 							<li>
-								<span class="keys">Budget: </span>{{movieobj.budget}}
+								<span class="keys">Budget: </span>$ {{"{:,}".format(movieobj.budget|int)}}
 							</li>
 						{% endif %}
 						{% if movieobj.imdb_id %}
@@ -49,22 +47,21 @@
 				</div>
 				<div class="column" style="width: 50%">
 					<ul>
-						{% if movieobj.revenue %}
-							<li>
-								<span class="keys">Revenue: </span><span>$ {{movieobj.revenue}}</span>
-							</li>
-						{% endif %}
 						{% if movieobj.vote_average %}
 							<li>
 								<span class="keys">Avg. ratings: </span><span>{{movieobj.vote_average}} ⭐ ({{(movieobj.vote_count|int)}} votes)</span>
 							</li>
 						{% endif %}
+						{% if movieobj.revenue %}
+							<li>
+								<span class="keys">Revenue: </span><span>$ {{"{:,}".format(movieobj.revenue|int)}}</span>
+							</li>
+						{% endif %}
 						{% if movieobj.cast %}
 							<li>
 								<span class="keys">Cast: </span>
-								{% for gnr in movieobj.cast %}
-									{{gnr}},
-								{% endfor %}
+								{{movieobj.cast|join(', ')}}
+
 							</li>
 						{% endif %}
 						{% if movieobj.director %}
