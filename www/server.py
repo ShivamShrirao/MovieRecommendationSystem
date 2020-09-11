@@ -28,7 +28,7 @@ def submit():
 	resp = []
 	if term:
 		res = db.movies.find({"title": re.compile(term, re.IGNORECASE)}, {"_id": 0, "title": 1, "id": 1, "poster_path": 1},
-				sort=[("title", 1)],
+				sort=[("vote_weight", -1), ("title", 1)],
 				limit=12)
 		for nm in res:
 			resp.append({
@@ -45,7 +45,18 @@ def search():
 	try:
 		term = request.args['q']
 		if term:
-			res = db.movies.find({"title": re.compile(term, re.IGNORECASE)}, {"_id": 0}, sort=[("title", 1)], limit=30)
+			res = db.movies.find({"title": re.compile(term, re.IGNORECASE)}, {"_id": 0}, sort=[("vote_weight", -1), ("title", 1)], limit=30)
+	except KeyError:
+		pass
+	return render_template("search.html", res=res)
+
+
+@app.route('/filter/<genre>')
+def filter(genre):
+	res = []
+	try:
+		res = db.movies.find({"genres": genre}, {"_id": 0}, sort=[("vote_weight", -1)], limit=30)
+		print(res.next())
 	except KeyError:
 		pass
 	return render_template("search.html", res=res)

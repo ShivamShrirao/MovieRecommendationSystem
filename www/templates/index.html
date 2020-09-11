@@ -42,7 +42,9 @@
                   .attr("transform", "translate(420,200)")
                   .selectAll("text")
                   .data(words)
-                    .enter().append("text")
+                    .enter()
+                    .append("a").attr("href", function(d) { return "/filter/" + d.text; })
+                    .append("text")
                       .style("font-size", function(d) { return d.size + "px"; })
                       .style("fill", function(d, i) { return  d3.schemeCategory20[i]; })
                     .attr("transform", function(d) {
