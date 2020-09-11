@@ -15,7 +15,6 @@
 		background-color: #ffffffaa;
 		border-radius: 25px;
 		padding-left: 10px;
-		/*padding-bottom: 5px;*/
 		box-shadow: 6px 6px 5px;
 	}
 
@@ -34,4 +33,10 @@
 	{% endwith %}
 	<br>
 	<h1 align="center"><b style="color: black">Similar Movies: </b></h1>
+	{% for sim in similar %}
+		{% with movieobj=sim %}
+			{% include "tile.html" %}
+		{% endwith %}
+		<br>
+	{% endfor %}
 {% endblock %}

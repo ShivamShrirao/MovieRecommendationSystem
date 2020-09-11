@@ -1,7 +1,17 @@
 	<div class="row tile">
-		<h1><b><u>{{ movieobj.title }}</u></b></h1>
+		<a href="{{ url_for('about', id=movieobj.id)}}">
+			<h1 style="display: inline;"><b><u>{{ movieobj.title }}</u></b></h1>
+		</a>
+		{% if movieobj.cos_score %}
+			(Similarity score: {{movieobj.cos_score}})
+		{% endif %}
+		<br>
 		<div class="column" style="width: 9%">
-			<img src='https://image.tmdb.org/t/p/w154/{{ movieobj.poster_path }}' height="170" />
+			{% if movieobj.poster_path %}
+				<a href="{{ url_for('about', id=movieobj.id)}}">
+					<img src='https://image.tmdb.org/t/p/w154/{{ movieobj.poster_path }}' height="170" style="border-radius: 3px" />
+				</a>
+			{% endif %}
 		</div>
 		<div class="column" style="width: 90%">
 			<div class="row">
@@ -11,7 +21,7 @@
 							<li>
 								<span class="keys">Genres: </span>
 								{% for gnr in movieobj.genres %}
-									{{gnr}}
+									{{gnr}},
 								{% endfor %}
 							</li>
 						{% endif %}
@@ -53,7 +63,7 @@
 							<li>
 								<span class="keys">Cast: </span>
 								{% for gnr in movieobj.cast %}
-									{{gnr}}
+									{{gnr}},
 								{% endfor %}
 							</li>
 						{% endif %}

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 from flask import Flask, request, render_template, url_for
-from sentence_transformers import SentenceTransformer, util
+from sentence_transformers import util
+import torch
 import numpy as np
 import json
 import re
@@ -10,6 +11,8 @@ from bson.code import Code
 
 client = MongoClient("localhost", 27017)
 db = client.moviemeta
+
+corpus_embeddings = torch.load('datasets/corpus_embeddings.pt')
 
 app = Flask(__name__)
 
@@ -24,12 +27,14 @@ def submit():
 	term = request.args['term']
 	resp = []
 	if term:
-		res = db.movies.find({"title": re.compile(term, re.IGNORECASE)}, {"_id": 0, "title": 1, "id": 1, "poster_path": 1}, sort=[("title", 1)],
+		res = db.movies.find({"title": re.compile(term, re.IGNORECASE)}, {"_id": 0, "title": 1, "id": 1, "poster_path": 1},
+				sort=[("title", 1)],
 				limit=12)
 		for nm in res:
 			resp.append({
 					"value": nm["title"],
-					"label": "<a href='"+url_for('about', id=nm["id"])+"'><img src='https://image.tmdb.org/t/p/w92" + str(nm["poster_path"]) + "' height='70' />" + str(nm["title"]) + "</a>"
+					"label": "<a href='" + url_for('about', id=nm["id"]) + "'><img src='https://image.tmdb.org/t/p/w92" + str(
+							nm["poster_path"]) + "' height='70' />" + str(nm["title"]) + "</a>"
 					})
 	return json.dumps(resp)
 
@@ -48,15 +53,30 @@ def search():
 				pass
 	except KeyError:
 		pass
-	return render_template("about.html", ret=ret)
+	return render_template("search.html", ret=ret)
+
+
+def get_recommendations(idx, top_k=21):
+	cur_embedding = corpus_embeddings[idx]
+	cos_scores = util.pytorch_cos_sim(cur_embedding, corpus_embeddings)[0]
+	cos_scores = cos_scores.cpu()
+	top_results = np.argpartition(-cos_scores, range(top_k))
+	return top_results[1:top_k], cos_scores
 
 
 @app.route('/about/<id>')
 def about(id):
 	ret = db.movies.find_one({"id": int(id)}, {"_id": 0})
+	ret["cos_score"] = False
+	similar = []
 	if ret is None:
-		ret = {"title": "Not Found!"}
-	return render_template("about.html", main_movie=ret)
+		ret = {"title": "Not Found!", "poster_path": False}
+	else:
+		top_results, cos_scores = get_recommendations(ret["idx"])
+		for i in top_results:
+			similar.append(db.movies.find_one({"idx": i.item()}, {"_id": 0}))
+			similar[-1]["cos_score"] = f"{cos_scores[i].item():.2f}"
+	return render_template("about.html", main_movie=ret, similar=similar)
 
 
 def get_genre_count():
@@ -97,5 +117,5 @@ def wordcloud():
 
 
 if __name__ == '__main__':
-	app.run(debug=False)
+	app.run(debug=True)
 #	app.run(host='0.0.0.0', port=31796, debug=False)
