@@ -56,7 +56,6 @@ def filter(genre):
 	res = []
 	try:
 		res = db.movies.find({"genres": genre}, {"_id": 0}, sort=[("vote_weight", -1)], limit=30)
-		print(res.next())
 	except KeyError:
 		pass
 	return render_template("search.html", res=res)
@@ -122,5 +121,5 @@ def wordcloud():
 
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(debug=False)
 #	app.run(host='0.0.0.0', port=31796, debug=False)
