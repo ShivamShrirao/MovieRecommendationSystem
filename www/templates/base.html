@@ -12,7 +12,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}">
   </head>
   <body class="w3-theme">
-    <div id="nav-icon1" onclick="togNav()">
+    <div id="nav-icon1" onclick="togNav()" style="top:0; position: fixed;">
             <span></span>
             <span></span>
             <span></span>
@@ -41,7 +41,7 @@
       }
     </script>
     <div id="main">
-      <nav class="navbar navbar-inverse" id="navBarid">
+      <nav class="navbar navbar-inverse" id="navBarid" style="position: fixed; top: 0; width: 100%">
         <div class="container-fluid">
             <!--items-->
             <div class="collapse navbar-collapse" id="topNavBar">
@@ -85,7 +85,7 @@
               <script>M.toast({html: '{{message}}', classes: 'w3-theme-red rounded', displayLength: 10000});</script>
           {% endfor %}
       {% endif %}
-      <div class="w3-row-padding w3-stretch w3-padding w3-margin">
+      <div class="w3-row-padding w3-stretch w3-padding w3-margin" style="margin-top: 45px!important">
         {% block content %}
             <h1>Welcome to Movie Recommendation System.</h1>
         {% endblock %}
