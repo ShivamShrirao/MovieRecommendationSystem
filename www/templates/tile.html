@@ -3,7 +3,7 @@
 			<h1 style="display: inline;"><b><u>{{ movieobj.title }}</u></b></h1>
 		</a>
 		{% if movieobj.cos_score %}
-			(Similarity score: {{movieobj.cos_score}})
+			(Similarity score: {{"{:.2f}".format(movieobj.cos_score)}})
 		{% endif %}
 		<br>
 		<div class="column" style="width: 9%">

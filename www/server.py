@@ -79,7 +79,8 @@ def about(id):
 		top_results, cos_scores = get_recommendations(ret["idx"])
 		for i in top_results:
 			similar.append(db.movies.find_one({"idx": i.item()}, {"_id": 0}))
-			similar[-1]["cos_score"] = f"{cos_scores[i].item():.2f}"
+			similar[-1]["cos_score"] = cos_scores[i].item()
+		similar[:15] = sorted(similar[:15], key=lambda e: e["vote_weight"]*e["cos_score"], reverse=True)
 	return render_template("about.html", main_movie=ret, similar=similar)
 
 
