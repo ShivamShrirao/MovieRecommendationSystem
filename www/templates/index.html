@@ -26,7 +26,7 @@
     <script>
     var frequency_list = {{ frq|safe }};
 
-    d3.layout.cloud().size([800, 300])
+    d3.layout.cloud().size([0.7*document.body.clientWidth, 0.7*document.body.clientHeight])
             .words(frequency_list)
             .rotate(0)
             .fontSize(function(d) { return d.size; })
@@ -35,17 +35,17 @@
 
     function draw(words) {
         d3.select("#main").append("svg")
-                .attr("width", 1050)
-                .attr("height", 450)
+                .attr("width", 0.8*document.body.clientWidth)
+                .attr("height", 0.8*document.body.clientHeight)
                 .attr("class", "wordcloud")
                 .append("g")
-                  .attr("transform", "translate(420,200)")
+                  .attr("transform", "translate("+0.3*document.body.clientWidth+","+0.35*document.body.clientHeight+")")
                   .selectAll("text")
                   .data(words)
                     .enter()
                     .append("a").attr("href", function(d) { return "/filter/" + d.text; })
                     .append("text")
-                      .style("font-size", function(d) { return d.size + "px"; })
+                      .style("font-size", function(d) { return d.size*document.body.clientHeight/700 + "px"; })
                       .style("fill", function(d, i) { return  d3.schemeCategory20[i]; })
                     .attr("transform", function(d) {
                         return "translate(" + [d.x, d.y] + ")";

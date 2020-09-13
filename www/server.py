@@ -42,13 +42,14 @@ def submit():
 @app.route('/search')
 def search():
 	res = []
+	term = None
 	try:
 		term = request.args['q']
 		if term:
 			res = db.movies.find({"title": re.compile(term, re.IGNORECASE)}, {"_id": 0}, sort=[("vote_weight", -1), ("title", 1)], limit=30)
 	except KeyError:
 		pass
-	return render_template("search.html", res=res)
+	return render_template("search.html", qtype="Search", res=res, query=term)
 
 
 @app.route('/filter/<genre>')
@@ -58,7 +59,7 @@ def filter(genre):
 		res = db.movies.find({"genres": genre}, {"_id": 0}, sort=[("vote_weight", -1)], limit=30)
 	except KeyError:
 		pass
-	return render_template("search.html", res=res)
+	return render_template("search.html", qtype="Filter", res=res, query=genre)
 
 
 def get_recommendations(idx, top_k=31):
