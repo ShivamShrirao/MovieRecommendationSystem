@@ -22,6 +22,11 @@ def index():
 	return render_template("index.html", frq=wordcloud())
 
 
+@app.route('/bar_graph')
+def bar_graph():
+	return render_template("bar_graph.html")
+
+
 @app.route('/fetch')
 def submit():
 	term = request.args['term']
